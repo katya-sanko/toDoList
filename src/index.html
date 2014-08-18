@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>to do list</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="css/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
+	<script src="js/code.js"></script>
+	<link rel="stylesheet" href="css/bootstrap-3.2.0-dist/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+	<div class="spacer"></div>
+	<section class="container">
+		<!-- Nav tabs -->
+		<ul class="nav nav-tabs" role="tablist">
+		  <li class="active"><a href="#todo" role="tab" data-toggle="tab">To do List</a></li>
+		  <li><a href="#page2" role="tab" data-toggle="tab">May be drag n drop</a></li>
+		  <li><a href="#page3" role="tab" data-toggle="tab">May be smth with ajax?</a></li>
+		</ul>
+		<!-- Tab panes -->
+		<div class="tab-content">
+		  <div class="tab-pane fade in active" id="todo">
+		  	<!--start of to do-->
+		  	
+		  	<div class="row">
+			  <div class="col-md-6 col-md-offset-3">
+			  	<h2>Add day-deal to your list:</h2>
+			    <div class="input-group">
+			      <input type="text" class="form-control">
+			      <span class="input-group-btn">
+			        <button id="add" class="btn btn-success" type="button">Go!</button>
+			      </span>
+			    </div><!-- /input-group -->
+			  </div><!-- /.col-lg-6 -->
+			</div><!-- /.row -->
+
+			<div id="task1" class="row task-divider">
+				 <div class="col-lg-6 col-md-offset-3">
+				    <div class="input-group">
+				      <input type="text" class="form-control">
+				      <div class="input-group-btn">
+				        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Action <span class="caret"></span></button>
+				        <ul class="dropdown-menu dropdown-menu-right" role="menu">
+				          <li><a href="#">Action</a></li>
+				          <li class="divider"></li>
+				          <li><a href="#" class="btn-info">Done</a></li>
+				          <li><a href="#" class="btn-warning">Edit</a></li>
+				        </ul>
+				      </div><!-- /btn-group -->
+				    </div><!-- /input-group -->
+				  </div><!-- /.col-lg-6 -->
+			</div>
+			<!--end-->
+		  </div>
+		  <div class="tab-pane fade" id="page2"><p>Hello my friend I find you naked so borrow me a needle thee</p></div>
+		  <div class="tab-pane fade" id="page3"><p>What I supposed to do? Hello my friend I find you naked so borrow me a needle thee</p></div>
+		</div>
+	</section>
+</body>
+</html>
