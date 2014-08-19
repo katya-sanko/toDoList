@@ -5,48 +5,55 @@ Storage.prototype.checkStorage = function() {
 	return typeof(Storage) !== "undefined"; // false if there is no local storage
 };
 
-Storage.prototype.addTask = function(id) { // id = "task1"
+Storage.prototype.selectTasks = function() { // selects and parsing 'tasks ' from local storage
 	if(this.checkStorage()){
-		var _key = id, _value = document.getElementById(id).getElementsByTagName('input')[0].value;
+		// Retrieve the object from storage
+		var retrievedTasks = localStorage.getItem('tasks');
+
+		if((typeof retrievedTasks == 'undefined') || (retrievedTasks == null) || isNaN(retrievedTasks)){
+			retrievedTasks = {}; // if storage is empty, there are new tasks
+		}
+		else{
+			retrievedTasks = JSON.parse(retrievedTasks); // parsing
+		}
+
+		return retrievedTasks; //returns parsed object
+	}
+};
+
+Storage.prototype.addTask = function(id) { // id = "task1"
+		var retrievedTasks = this.selectTasks();
+
+		retrievedTasks[id] = document.getElementById(id).getElementsByTagName('input')[0].value; // its new key-value of it
+		
 		try{
-			localStorage.setItem(_key, _value);
+			localStorage.setItem('tasks', JSON.stringify(retrievedTasks)); // new tasks : json obj
 		} catch(e) {
 			if( e == QUOTA_EXCEEDED_ERR){
 				console.error('Error: not enough space');
 			}
 		}
-	}
 };
 
 Storage.prototype.removeTask = function(id) {
-	if(this.checkStorage()){
-		if(localStorage.length != 0){
-			localStorage.removeItem(id); // id is a key, "task1"
+		var retrievedTasks = this.selectTasks();
+
+		delete retrievedTasks[id];// removing from json
+		
+		try{
+			localStorage.setItem('tasks', JSON.stringify(retrievedTasks)); // new tasks : json obj
+		} catch(e) {
+			if( e == QUOTA_EXCEEDED_ERR){
+				console.error('Error: not enough space');
+			}
 		}
-	}
 };
 
-Storage.prototype.getTasks = function() {
-	if(this.checkStorage()){
-		if(localStorage.length != 0){
-			var savedTasks = {};
-			for (var i = 0; i < localStorage.length; i++) {
-				var _key =  "task" + i;
-				if (localStorage.getItem(_key) != null) {
-					savedTasks[_key] = localStorage.getItem(_key); // in obj we get "task1" + "text user"
-					console.log(savedTasks)
-				};
-				
-			};
-			return savedTasks; // returns object with todos
-		}
-	}
-};
 
 function ToDoList () {
 	this.allUsedIDs = parseInt(localStorage.getItem('savedNumber'));
 	console.log('counts of numbers' + this.allUsedIDs);
-	if((typeof this.allUsedIDs == 'undefined') || (this.allUsedIDs == null)){
+	if((typeof this.allUsedIDs == 'undefined') || (this.allUsedIDs == null) || isNaN(this.allUsedIDs)){
 		this.allUsedIDs = 0;
 		try{
 			localStorage.setItem('savedNumber', 0);
@@ -93,7 +100,7 @@ ToDoList.prototype.representingSavedTasks = function() {
 	var store = new Storage();
 
 	try{
-			var tasksCollection = store.getTasks() ;
+			var tasksCollection = store.selectTasks() ;
 			var keys = Object.keys(tasksCollection);
 			console.log(keys);
 			for (var i = 0; i < keys.length; i++) {
@@ -112,6 +119,10 @@ ToDoList.prototype.attachEventsOnload = function() {
 	console.log(self);
 
 	this.representingSavedTasks();
+
+	if(document.getElementsByClassName('task').length > 1){
+		document.getElementById('task').style.display = 'none';
+	}
 
 	var adder = function() {
 
