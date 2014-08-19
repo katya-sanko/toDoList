@@ -95,7 +95,8 @@ ToDoList.prototype.representingSavedTasks = function() {
 	var store = new Storage();
 	var tasksCollection = store.getTasks();
 	var keys = Object.keys(tasksCollection);
-	for (var i = 0; i < tasksCollection; i++) {
+	console.log(keys);
+	for (var i = 0; i < keys.length; i++) {
 		this.createTaskView(keys[i], tasksCollection[keys[i]]);
 	};
 };
