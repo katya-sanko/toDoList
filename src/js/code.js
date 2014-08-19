@@ -3,9 +3,9 @@ function Storage(){
 
 Storage.prototype.checkStorage = function() {
 	try {
-	   return 'localStorage' in window && window['localStorage'] !== null;
+		return 'localStorage' in window && window['localStorage'] !== null;
 	} catch (e) {
-	   return false;
+		return false;
 	}
 };
 
@@ -51,10 +51,6 @@ Storage.prototype.getTasks = function() {
 
 
 
-
-
-
-
 function ToDoList () {
 	this.allUsedIDs = null;
 }
@@ -95,7 +91,7 @@ ToDoList.prototype.createTaskView = function(id, value) {
 		}
 };
 
-Storage.prototype.representingSavedTasks = function() {
+ToDoList.prototype.representingSavedTasks = function() {
 	var store = new Storage();
 	var tasksCollection = store.getTasks();
 	var keys = Object.keys(tasksCollection);
@@ -109,6 +105,8 @@ ToDoList.prototype.attachEventsOnload = function() {
 	var task1 = document.getElementById('task1');
 	var self = this;
 	console.log(self);
+
+	this.representingSavedTasks();
 
 	var adder = function () {
 
