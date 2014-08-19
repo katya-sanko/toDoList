@@ -44,7 +44,19 @@ Storage.prototype.getTasks = function() {
 };
 
 function ToDoList () {
-	this.allUsedIDs = null;
+	this.allUsedIDs = parseInt(localStorage.getItem('savedNumber'));
+	console.log('counts of numbers' + this.allUsedIDs);
+	if((typeof this.allUsedIDs == 'undefined') || (this.allUsedIDs == null)){
+		this.allUsedIDs = 0;
+		try{
+			localStorage.setItem('savedNumber', 0);
+		} catch(e) {
+			if( e == QUOTA_EXCEEDED_ERR){
+				console.error('Error: not enough space');
+			}
+		}
+	}
+
 }
 
 ToDoList.prototype.createTaskView = function(id, value) {
@@ -88,14 +100,14 @@ ToDoList.prototype.representingSavedTasks = function() {
 				this.createTaskView(keys[i], tasksCollection[keys[i]]);
 			};
 	} catch(e){
-		//console.error('there are no data in storage');
+		console.error('there are no data in storage');
 	}
 
 };
 
 ToDoList.prototype.attachEventsOnload = function() {
 	var addBtn = document.getElementById('add');
-	var task1 = document.getElementById('task1');
+	//document.getElementById('task').style.display = 'none';
 	var self = this;
 	console.log(self);
 
@@ -106,6 +118,7 @@ ToDoList.prototype.attachEventsOnload = function() {
 		console.log(self.allUsedIDs);
 		var current_id = 'task' + self.allUsedIDs++;
 		self.createTaskView(current_id, null); // create new todo
+		localStorage.setItem('savedNumber', self.allUsedIDs); //
 	}
 	addBtn.addEventListener('click', adder, false);
 };
