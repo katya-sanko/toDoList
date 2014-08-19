@@ -2,16 +2,11 @@ function Storage(){
 }
 
 Storage.prototype.checkStorage = function() {
-	try {
-		return 'localStorage' in window && window['localStorage'] !== null;
-	} catch (e) {
-		return false;
-	}
+	return typeof(Storage) !== "undefined"; // false if there is no local storage
 };
 
-
 Storage.prototype.addTask = function(id) { // id = "task1"
-	if(this.checkStorage() != false){
+	if(this.checkStorage()){
 		var _key = id, _value = document.getElementById(id).getElementsByTagName('input')[0].value;
 		try{
 			localStorage.setItem(_key, _value);
@@ -24,7 +19,7 @@ Storage.prototype.addTask = function(id) { // id = "task1"
 };
 
 Storage.prototype.removeTask = function(id) {
-	if(this.checkStorage() != false){
+	if(this.checkStorage()){
 		if(localStorage.length != 0){
 			localStorage.removeItem(id); // id is a key, "task1"
 		}
@@ -32,24 +27,21 @@ Storage.prototype.removeTask = function(id) {
 };
 
 Storage.prototype.getTasks = function() {
-	if(this.checkStorage() != false){
+	if(this.checkStorage()){
 		if(localStorage.length != 0){
 			var savedTasks = {};
 			for (var i = 0; i < localStorage.length; i++) {
-				var _key =  i + 1;
-				_key = "task" + _key;
+				var _key =  "task" + i;
 				if (localStorage.getItem(_key) != null) {
 					savedTasks[_key] = localStorage.getItem(_key); // in obj we get "task1" + "text user"
 					console.log(savedTasks)
 				};
 				
 			};
-			return savedTasks; // returns massiv with todos
+			return savedTasks; // returns object with todos
 		}
 	}
 };
-
-
 
 function ToDoList () {
 	this.allUsedIDs = null;
@@ -58,25 +50,19 @@ function ToDoList () {
 ToDoList.prototype.createTaskView = function(id, value) {
 		var store = new Storage();
 
-		var newTask = document.createElement('div');
-		newTask.innerHTML = '<div class="col-lg-6 col-md-offset-3"><div class="input-group"><input type="text" class="form-control"><div class="input-group-btn"><button type="button" class="btn btn-default done"><span class="glyphicon glyphicon-remove"></span></button></div><!-- /btn-group --></div><!-- /input-group --></div><!-- /.col-lg-6 -->';
+		var newTask = document.getElementById('task').cloneNode(true);
+		console.log(newTask);
 		newTask.id = id; //id what we get
-		newTask.className = 'row task task-divider';
 
-		var parent = document.getElementById('todo');
-		parent.appendChild(newTask);
+		document.getElementById('todo').appendChild(newTask);
 
 		if (value == null){
-			var taskText = document.getElementById('taskText').value;
-			newTask.getElementsByTagName('input')[0].value = taskText;
+			newTask.getElementsByTagName('input')[0].value = document.getElementById('taskText').value;
 			document.getElementById('taskText').value = ""; // clear
 		}
 		else {
 			newTask.getElementsByTagName('input')[0].value = value;
-			console.log('in restoring');
 		}
-
-		
 
 		store.addTask(newTask.id);
 
@@ -93,12 +79,18 @@ ToDoList.prototype.createTaskView = function(id, value) {
 
 ToDoList.prototype.representingSavedTasks = function() {
 	var store = new Storage();
-	var tasksCollection = store.getTasks();
-	var keys = Object.keys(tasksCollection);
-	console.log(keys);
-	for (var i = 0; i < keys.length; i++) {
-		this.createTaskView(keys[i], tasksCollection[keys[i]]);
-	};
+
+	try{
+			var tasksCollection = store.getTasks() ;
+			var keys = Object.keys(tasksCollection);
+			console.log(keys);
+			for (var i = 0; i < keys.length; i++) {
+				this.createTaskView(keys[i], tasksCollection[keys[i]]);
+			};
+	} catch(e){
+		//console.error('there are no data in storage');
+	}
+
 };
 
 ToDoList.prototype.attachEventsOnload = function() {
@@ -109,14 +101,13 @@ ToDoList.prototype.attachEventsOnload = function() {
 
 	this.representingSavedTasks();
 
-	var adder = function () {
+	var adder = function() {
 
 		console.log(self.allUsedIDs);
 		var current_id = 'task' + self.allUsedIDs++;
 		self.createTaskView(current_id, null); // create new todo
 	}
 	addBtn.addEventListener('click', adder, false);
-
 };
 
 window.onload = function() { 
